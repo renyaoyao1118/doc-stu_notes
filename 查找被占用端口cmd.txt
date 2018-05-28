@@ -1,0 +1,10 @@
+1.
+netstat -ano 查看所有运行情况
+2.
+netstat -aon|findstr "49157"  (所被占用的port)
+3.
+tasklist|findstr "2720"  (pid)
+4.
+taskkill /f /t /im Tencentdl.exe (想要终止的进程)
+
+
