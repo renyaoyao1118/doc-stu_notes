@@ -1,0 +1,139 @@
+
+--java项目、java web项目中 各文件夹及文件的含义
+#.classpath保存的是项目所用的外部引用包的路径。
+build path中add jar可以引用工程文件夹以外的jar，如果引用了工程以外的jar，在.classpath文件中会添加（如java的jar包jre和tomcat的jar包）：
+    <classpathentry kind="lib" path="D:/workspace/ojdbc14.jar"/>
+web-info/lib中的jar不会往.classpath文件中会添加， 其余两者没有区别，编译的时候先找classpath中的jar如果没有则找web-info/lib中的jar。
+
+#.mymetadata 保存的是工程属性文件
+
+#.project 是工程构建配置文件
+
+#.metadata文件夹的作用  Eclipse内所有改动都放在这个文件夹
+#.setting文件夹的作用  
+\.settings\
+    把.js文件的编码方式由改成默认的ISO-8859-1改成GBK时，这个文件会有记录。
+    如果把这个文件删了，在eclipse中查看js文件的中文字符就是乱码，但发布的时候还是能正常显示中文的。
+    结论：这个文件是eclipse查看js文件的时候用的，记录了用什么编码方式查看。与发布无关。.settings\文件夹不会被打到.war包里。
+
+	
+	
+	
+--	1.设置"source folder"与"output folder".
+
+    * source folder:存放.java源文件的根目录;
+    * output folder：.class编译输出的根目录；
+    * 纯“java project”中，一般把"src"设置为source folder，把bin设置为output folder；
+    * “web project”中，一般把"src"设置为source folder，把WEB-INF/classes设置为output 
+
+folder；(以上为eclipse的默认设置）
+    * “java build path”中的“source”页签：这个就是用来设置"source folder"与"output 
+
+folder"的，一般就采用以上eclipse的默认设置；
+
+    * 右键工程名－>"properties"->"java build path"->"source"->"output folder"，点“browser”
+
+选定一个文件夹做为根目录，ok！
+
+    * 一般新建一个“java project”时，如果点“next”（而不是直接点“finish”），设置一个
+
+“source folder”（如"src"。），那么一般会自动默认的“output folder”是“工程名/bin”，采用
+
+默认的bin做为output folder即可。
+
+    *如果在“java build path”的“source”页签中没有把"src"设置为source folder，则"src"文件
+
+夹在.java文件的package中要以包名的方式加入；例如：
+"src"未设置为source folder：package src.com.decisiontree;
+"src"设置为了source folder：package com.decisiontree;
+
+感觉source folder就是定位.java源文件根目录的意思吧，也就是说它与package的含义是有这么一点区别的。
+
+    * 如果不设置output folder，默认输出路径为：与.java文件同一个文件夹下。
+    * 可以使用“add folder”选项设置“工程名”下的任意文件夹做为“source folder”；
+    * 或者可以使用“Link Source”选项导入任意文件夹做为“source folder”；
+
+
+开发环境时(没有打成独立的包)：
+1.普通java项目
+一般classespath:/bin/
+2.web项目
+一般classespath：/build/classes/
+3.maven项目
+一般classespath：/target/classes
+
+以下是mavaen推荐的项目目录.
+├── pom.xml
+└── src
+    ├── main
+    │   ├── java
+    │   │   └── mygroup
+    │   │       ├── controller
+    │   │       │   ├── HomeController.java
+    │   │       │   └── PersonController.java
+    │   │       ├── dao
+    │   │       │   └── PersonDao.java
+    │   │       └── model
+    │   │           └── Person.java
+    │   ├── resources
+    │   │   ├── db.properties
+    │   │   ├── log4j.xml
+    │   │   └── META-INF
+    │   │       └── persistence.xml
+    │   └── webapp
+    │       ├── index.html
+    │       ├── META-INF
+    │       │   ├── context.xml
+    │       │   └── MANIFEST.MF
+    │       ├── resources
+    │       │   └── css
+    │       │       └── screen.css
+    │       └── WEB-INF
+    │           ├── spring
+    │           │   ├── app
+    │           │   │   ├── controllers.xml
+    │           │   │   └── servlet-context.xml
+    │           │   ├── db.xml
+    │           │   └── root-context.xml
+    │           ├── views
+    │           │   ├── edit.jsp
+    │           │   ├── home.jsp
+    │           │   └── list.jsp
+    │           └── web.xml
+    └── test
+        ├── java
+        │   └── mygroup
+        │       ├── controller
+        │       │   ├── DataInitializer.java
+        │       │   ├── HomeControllerTest.java
+        │       │   └── PersonControllerTest.java
+        │       └── dao
+        │           └── PersonDaoTest.java
+        └── resources
+            ├── db.properties
+            ├── log4j.xml
+            ├── test-context.xml
+            └── test-db.xml
+==========================================================================================================
+
+4.项目路径的获取
+--如何获得当前文件路径
+常用：
+(1).Test.class.getResource("")
+得到的是当前类FileTest.class文件的URI目录。不包括自己！
+(2).Test.class.getResource("/")
+得到的是当前的classpath的绝对URI路径。
+(3).Thread.currentThread().getContextClassLoader().getResource("")
+得到的也是当前ClassPath的绝对URI路径。
+(4).Test.class.getClassLoader().getResource("")
+得到的也是当前ClassPath的绝对URI路径。
+(5).ClassLoader.getSystemResource("")
+得到的也是当前ClassPath的绝对URI路径。
+尽量不要使用相对于System.getProperty("user.dir")当前用户目录的相对路径，后面可以看出得出结果五花八门。
+(6) new File("").getAbsolutePath()也可用。
+
+
+总结：
+1.classpath就是java代码编译后.class文件存放的路径；
+2.开发环境和导出独立包的classpath会有变化：java工程独立的包classpath一般是放在最外面，web工程一般是WEB-INF下的classes下；
+3.可以通过设置项目的src folder 和 output folder来设置开发环境时的路径问题，实现工程跨IDE的导入导出；
